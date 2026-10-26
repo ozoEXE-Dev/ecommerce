@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import mongoose, {Query}from "mongoose";
 
-
+import "dotenv/config"
 const productSchema = new mongoose.Schema(
     {
         title: {
@@ -41,12 +41,15 @@ const productSchema = new mongoose.Schema(
 
         imageCover: {
             type: String,
-            required: [true, 'Product Image cover is required'],
+            required: [true, 'Product image cover is required'],
         },
-        images: [String],
+        images: {
+            type: [String],
+            required: [true, 'Product images are required'],
+        },
         category: {
             type: mongoose.Schema.ObjectId,
-            ref: 'category',
+            ref: 'Category',
             required: [true, 'Product must be belong to category'],
         },
         subcategories: [
@@ -72,8 +75,38 @@ const productSchema = new mongoose.Schema(
     },
     {
         timestamps: true,
+        toJSON: { virtuals: true },
+        toObject: { virtuals: true }
     }
 );
+const setImageURL = doc => {
+    doc.images.forEach((image, index) => {
+        const imageURL = `${process.env.HOST_NAME}/products/${image}`
+        doc.images[index] = imageURL;
+    });
+    doc.imageCover = `${process.env.HOST_NAME}/products/${doc.imageCover}`;
+}
 
-const Product = mongoose.model("product", productSchema);
+productSchema.pre(/^find/,function (this:Query<any,any>) {
+    this.populate("category", "name -_id",)
+});
+
+productSchema.pre("findOne", function(){
+    this.populate("reviews")
+})
+
+productSchema.post("init", (doc) => {
+    setImageURL(doc);
+})
+productSchema.post("save", (doc) => {
+    setImageURL(doc);
+})
+
+productSchema.virtual("reviews", {
+    ref: "Review",
+    foreignField: "product",
+    localField: "_id",
+})
+
+const Product = mongoose.model("Product", productSchema);
 export default Product;

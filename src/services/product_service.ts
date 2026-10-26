@@ -5,20 +5,20 @@ import { fstat } from "node:fs";
 import ApiFeatures from "../utils/api_features.js";
 
 export const createProduct = (body) => {
-    return Product.create(body);
+     return Product.create(body);
 
 }
 
 export const getProducts = async (query) => {
     const documentsCount = await Product.countDocuments();
-    const apiFeatures = new ApiFeatures(query, Product.find().populate("category","name -_id"));
-    apiFeatures.filter().search("product").fields().sort().paginate(documentsCount);
+    const apiFeatures = new ApiFeatures(query, Product.find())
+    apiFeatures.filter().search("Product").fields().sort().paginate(documentsCount);
     const products = await apiFeatures.mongooseQuery;
     return { results: products.length, paginationResults: apiFeatures.pagination, data: products };
 }
 
 export const getProduct = (id: string) => {
-    return Product.findById(id).populate("category", "name -_id");
+    return Product.findById(id);
 }
 
 export const updateProduct = (id: string, body) => {

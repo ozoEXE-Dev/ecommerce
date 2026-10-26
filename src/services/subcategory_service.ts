@@ -4,7 +4,7 @@ import slugify from "slugify";
 import ApiFeatures from "../utils/api_features.js";
 
 export const createSubcategory = (body)=>{
-    return  Subcategory.create({...body, slug: slugify(body.name)});
+    return  Subcategory.create(body);
 }
 
 export const getSubcategories = async(query, filter)=>{
@@ -24,5 +24,5 @@ export const getSubCategory = (id:string)=>{
 }
 
 export const updateSubCategory = (id:string, body)=>{
-    return Subcategory.findByIdAndUpdate(id,{...body, slug:slugify(body.name)},{returnDocument: "after"});
+    return Subcategory.findByIdAndUpdate(id,body,{returnDocument: "after"});
 }

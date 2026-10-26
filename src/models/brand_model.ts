@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import "dotenv/config";
 
 const brandSchema = new mongoose.Schema({
     name: { 
@@ -13,9 +14,27 @@ const brandSchema = new mongoose.Schema({
         unique: true,
         required: [true, "slug is required"],
         lowercase: true,
+    },
+    image: {
+        type: mongoose.Schema.Types.String,
+        required: true
     }
 },{timestamps: true});
 
-const Brand = mongoose.model("brand", brandSchema);
+
+const setImageURL = doc => {
+    const imageURL = `${process.env.HOST_NAME}/brands/${doc.image}`
+    doc.image = imageURL;
+}
+
+brandSchema.post("init", (doc) => {
+    setImageURL(doc);
+})
+
+brandSchema.post("save", doc=>{
+    setImageURL(doc);
+})
+
+const Brand = mongoose.model("Brand", brandSchema);
 
 export default Brand;

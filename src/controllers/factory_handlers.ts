@@ -4,7 +4,7 @@ import AppError from "../errors/AppError.js";
 export const deleteOne = (service) => async (req: Request<{ id: string }>, res: Response) => {
     const id = req.params.id;
     const deletedDocument = await service(id);
-    if (!deletedDocument) {
+     if (!deletedDocument) {
         throw new AppError(404, "there is no document with this id: " + id);
     }
     res.status(200).send({ data: deletedDocument });
@@ -14,6 +14,7 @@ export const updateOne = (service) => async (req: Request<{ id: string }>, res: 
     const id = req.params.id;
     const body = req.body;
     const updatedDocument = await service(id, body);
+    console.log(updatedDocument);
     if (!updatedDocument) {
         throw new AppError(404, "there is no document with this id: " + id);
     }
@@ -26,11 +27,21 @@ export const createOne = (service) => async (req: Request, res: Response) => {
     return res.status(201).send({ data: createdDocument });
 }
 
+export const getAll = (service) => async (req: Request, res: Response) => {
+    const brands = await service(req.query);
+    return res.status(200).json(brands);
+}
+
 export const getOne = (service) => async (req: Request<{ id: string }>, res: Response) => {
     const id = req.params.id!;
+
     const document = await service(id);
+
     if (!document) {
         throw new AppError(404, "document not found");
     }
-    return res.status(200).json({ data: document });
+
+    return res.status(200).json({
+        data: document
+    });
 }

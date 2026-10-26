@@ -1,13 +1,14 @@
 import { Router } from "express";
 import * as subcategoryController from "../controllers/subcategory_controller.js";
 import * as subcategoryValidator from "../utils/validators/subcategory_validator.js";
+import { protect, allowedFor } from "../controllers/auth_controller.js";
 const subcategoryRouter = Router();
 
-subcategoryRouter.post("/api/subcategories", subcategoryValidator.createSubcategory, subcategoryController.createSubCategory);
-subcategoryRouter.post("/api/:category/subcategories", subcategoryValidator.createSubcategory, subcategoryController.createSubCategory);
-subcategoryRouter.get("/api/subcategories", subcategoryController.getSubcategories);
-subcategoryRouter.get("/api/:category/subcategories", subcategoryValidator.getSubcategoriesFromCategory ,subcategoryController.getSubcategories);
-subcategoryRouter.delete("/api/subcategories/:id", subcategoryValidator.deleteSubcategory, subcategoryController.deleteSubcategory)
-subcategoryRouter.get("/api/subcategories/:id", subcategoryValidator.getSubcategory, subcategoryController.getSubCategory);
-subcategoryRouter.patch("/api/subcategories/:id", subcategoryValidator.updateSubcategory, subcategoryController.updateSubCategory);
+subcategoryRouter.post("/api/v1/subcategories",protect, allowedFor("manager", "admin"), subcategoryValidator.createSubcategory, subcategoryController.createSubCategory);
+subcategoryRouter.post("/api/v1/categories/:category/subcategories",protect, allowedFor("manager", "admin"), subcategoryValidator.createSubcategoryFromCategory, subcategoryController.createSubCategory);
+subcategoryRouter.get("/api/v1/subcategories", subcategoryController.getSubcategories);
+subcategoryRouter.get("/api/v1/categories/:category/subcategories", subcategoryValidator.getSubcategoriesFromCategory ,subcategoryController.getSubcategories);
+subcategoryRouter.delete("/api/v1/subcategories/:id",protect, allowedFor("manager", "admin"), subcategoryValidator.deleteSubcategory, subcategoryController.deleteSubcategory)
+subcategoryRouter.get("/api/v1/subcategories/:id", subcategoryValidator.getSubcategory, subcategoryController.getSubCategory);
+subcategoryRouter.patch("/api/v1/subcategories/:id",protect, allowedFor("manager", "admin"), subcategoryValidator.updateSubcategory, subcategoryController.updateSubCategory);
 export default subcategoryRouter;

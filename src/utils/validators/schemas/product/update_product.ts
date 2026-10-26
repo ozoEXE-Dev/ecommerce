@@ -12,6 +12,7 @@ export const updateProductValidationSchema = {
     },
 
     title: {
+        trim:true,
         optional: true,
 
         isLength: {
@@ -24,13 +25,16 @@ export const updateProductValidationSchema = {
 
         custom: {
             options: (value, { req }) => {
-                req.body.slug = slugify(value);
-                return true;
+                if (value) {
+                    req.body.slug = slugify(value);
+                    return true;
+                }
             },
         },
     },
 
     description: {
+        trim:true,
         optional: true,
 
         isLength: {
@@ -69,6 +73,7 @@ export const updateProductValidationSchema = {
             bail: true,
         },
 
+        // checks it the price smaller than discounted price
         custom: {
             options: async (price, { req }) => {
                 let priceAfterDiscount = req.body.priceAfterDiscount;
@@ -112,6 +117,7 @@ export const updateProductValidationSchema = {
 
         toFloat: true,
 
+        //checks if the price after discount is greater than the price
         custom: {
             options: async (value, { req }) => {
                 // If price is being updated, use the new price
@@ -153,22 +159,6 @@ export const updateProductValidationSchema = {
         },
     },
 
-    imageCover: {
-        optional: true,
-
-        notEmpty: {
-            errorMessage: "Product imageCover cannot be empty",
-        },
-    },
-
-    images: {
-        optional: true,
-
-        isArray: {
-            errorMessage: "Images should be an array",
-        },
-    },
-
     category: {
         optional: true,
 
@@ -177,6 +167,7 @@ export const updateProductValidationSchema = {
             bail: true,
         },
 
+        //check that the category exist and all subcategories belong to that category
         custom: {
             options: async (categoryId, { req }) => {
                 // 1. Check that the category exists
@@ -252,6 +243,7 @@ export const updateProductValidationSchema = {
             bail: true,
         },
 
+        //check if subacategories exist and the subcategoris are child of the category
         custom: {
             options: async (subcategories, { req }) => {
                 let categoryId = req.body.category;
