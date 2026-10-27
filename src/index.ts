@@ -1,6 +1,5 @@
 import express from "express";
 import "dotenv/config";
-import morgan from "morgan";
 import { dbConnect } from "./config/db_connect.js";
 import router from "./routes/index.js";
 import { errorHandler } from "./errors/error_handler.js";
@@ -20,9 +19,6 @@ app.use(cors({
 app.use(express.json());
 app.use(express.static(path.join(process.cwd(), "uploads")));
 
-if (process.env.NODE_ENV === "devolopment") {
-    app.use(morgan("dev"));
-}
 
 app.set("query parser","extended");
 

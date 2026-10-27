@@ -1,10 +1,7 @@
 import AppError from "../errors/AppError.js";
 import * as authService from "../services/auth_service.js";
-import { getUser, getUserByEmail } from "../services/user_service.js";
-import jwt from "jsonwebtoken"
 import "dotenv/config"
-import bcrypt from "bcrypt"
-import type { StringValue } from "ms";
+
 
 
 // @desc sign up a user
