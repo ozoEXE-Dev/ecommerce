@@ -73,7 +73,7 @@ The exact route paths and request formats depend on the implementation in the so
 1. Clone this repository:
 
    ```bash
-   git clone <YOUR_REPOSITORY_URL>
+   git clone <https://github.com/ozoEXE-Dev/ecommerce.git>
    cd <YOUR_PROJECT_DIRECTORY>
    ```
 
