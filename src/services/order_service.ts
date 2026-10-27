@@ -159,22 +159,9 @@ const createCardOrder = async (session) => {
 };
 
 export const webhookCheckout = async (req) => {
-    const sig = req.headers['stripe-signature'];
-
-    let event;
-
-    try {
-        event = stripeClient.webhooks.constructEvent(
-            req.body,
-            sig,
-            (process.env.WEBHOOK_SECRET as string)
-        );
-    } catch (err) {
-        return false;
-    }
-    if (event.type === 'checkout.session.completed') {
+    if (req.type === 'checkout.session.completed') {
         //  Create order
-        await createCardOrder(event.data.object);
+        await createCardOrder(req.data.object);
     }
     return true
 };
