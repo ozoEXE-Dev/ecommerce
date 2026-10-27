@@ -2,7 +2,7 @@
   "name": "expressjs",
   "version": "1.0.0",
   "description": "",
-  "main": "index.mjs",
+  "main": "dist/index.js",
   "scripts": {
     "test": "jest",
     "dev": "tsx watch src/index.ts",
