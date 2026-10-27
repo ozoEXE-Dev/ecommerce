@@ -10,7 +10,7 @@
     "target": "ES2025",
     "moduleResolution": "NodeNext",
     "esModuleInterop": true,
-    "types": ["node", "express"],
+    "types": ["node"],
     "typeRoots": ["./node_modules/@types"],
     // For nodejs:
     // "lib": ["esnext"],
