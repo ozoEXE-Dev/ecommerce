@@ -34,6 +34,7 @@ export const signin = async (req, res, next) => {
 // @route middleware for protected routes
 // @access private
 export const protect = async (req, res, next) => {
+    console.log(req.headers)
     req.user = await authService.protect(req);
     next();
 }
