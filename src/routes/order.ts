@@ -12,5 +12,5 @@ orderRouter.get('/api/v1/orders/me/:id', protect, allowedFor('user'), orderContr
 orderRouter.patch('/api/v1/orders/:id/pay', protect, allowedFor('admin','manager'), orderController.updateOrderToPaid);
 orderRouter.patch('/api/v1/orders/:id/deliver', protect, allowedFor('admin','manager'), orderController.updateOrderToDelivered);
 orderRouter.get('/api/v1/orders/checkout-session/:id', orderValidator.checkoutSessionValidator, protect, allowedFor('user'), orderController.checkoutSession);
-orderRouter.post('/api/v1/orders/webhook-checkout',orderController.webhookCheckout);
+orderRouter.get('/api/v1/orders/webhook-checkout',orderController.webhookCheckout);
 export default orderRouter;

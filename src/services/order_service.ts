@@ -167,7 +167,7 @@ export const webhookCheckout = async (req) => {
         event = stripeClient.webhooks.constructEvent(
             req.body,
             sig,
-            (process.env.STRIPE_WEBHOOK_SECRET as string)
+            (process.env.WEBHOOK_SECRET as string)
         );
     } catch (err) {
         return false;
