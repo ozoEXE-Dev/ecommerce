@@ -3,7 +3,7 @@ import AppError from "../errors/AppError.js";
 
 const multerOptions = () => {
     const memoryStorage = multer.memoryStorage();
-    const filter = (req, file: Express.Multer.File, cb) => {
+    const filter = (req, file, cb) => {
         if (file.mimetype.startsWith("image")) {
             cb(null, true);
         }

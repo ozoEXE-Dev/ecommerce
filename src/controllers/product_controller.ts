@@ -13,7 +13,7 @@ export const uploadProductImages = uploadMixOfImages([{ name: "imageCover", maxC
 export const resizeProductImages = async (req, res, next) => {
     //resize image cover
 
-    const imageCover: Express.Multer.File[] | undefined= req.files?req.files.imageCover : undefined;
+    const imageCover = req.files?req.files.imageCover : undefined;
     if (imageCover) {
         console.log(true)
         const imageCoverFileName = `product-${randomUUID()}-${Date.now()}-cover.jpeg`;
@@ -21,7 +21,7 @@ export const resizeProductImages = async (req, res, next) => {
         req.body.imageCover = imageCoverFileName;
     }
     //resize product images
-    const images: Express.Multer.File[]  = req.file? req.files.images: undefined;
+    const images = req.file? req.files.images: undefined;
     req.body.images = [];
     if (images) {
         await Promise.all(images.map(async (image, index) => {
