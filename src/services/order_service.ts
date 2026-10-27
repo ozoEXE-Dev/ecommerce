@@ -116,9 +116,7 @@ export const checkoutSession = async (req) => {
         cancel_url: `${req.protocol}://${req.get('host')}/api/v1/cart/me`,
         customer_email: req.user.email,
         client_reference_id: req.params.cartId,
-        metadata: {
-            shippingAddress: req.body.shippingAddress,
-        },
+        metadata: req.body.shippingAddress,
     });
 
     // 4. Send session to response
