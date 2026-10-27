@@ -115,7 +115,7 @@ export const checkoutSession = async (req) => {
         success_url: `${req.protocol}://${req.get('host')}/api/v1/orders/me`,
         cancel_url: `${req.protocol}://${req.get('host')}/api/v1/cart/me`,
         customer_email: req.user.email,
-        client_reference_id: req.params.cartId,
+        client_reference_id: req.params.id,
         metadata: req.body.shippingAddress,
     });
 
