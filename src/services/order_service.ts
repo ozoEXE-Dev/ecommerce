@@ -159,9 +159,9 @@ const createCardOrder = async (session) => {
 };
 
 export const webhookCheckout = async (req) => {
-    if (req.type === 'checkout.session.completed') {
+    if (req.body.type === 'checkout.session.completed') {
         //  Create order
-        await createCardOrder(req.data.object);
+        await createCardOrder(req.body.data.object);
     }
     return true
 };
