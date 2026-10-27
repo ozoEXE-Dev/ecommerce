@@ -31,8 +31,6 @@ export const signin = async (body) => {
     return { user, token };
 }
 export const protect = async (req) => {
-    console.log("Authorization header exists:", !!req.headers.authorization);
-    console.log("Authorization scheme:", req.headers.authorization?.split(" ")[0]);
     //check if token exist, if so get it.
     let token;
     if (req.headers.authorization && req.headers.authorization.startsWith("Bearer ")) {
