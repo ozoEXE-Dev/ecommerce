@@ -73,3 +73,9 @@ export const checkoutSession = async (req, res, next) => {
   if (!session) throw new AppError(404, 'Checkout session not created');
   res.status(200).json({ status: 'success', data: session });
 };
+
+export const webhookCheckout = async (req, res, next) => {
+  const isValid = await orderService.webhookCheckout(req);
+  if (!isValid) throw new AppError(400, 'Webhook error');
+  res.status(200).json({ received: true });
+}

@@ -4,6 +4,9 @@ import Product from '../models/product_model.js';
 import AppError from '../errors/AppError.js';
 import Stripe from 'stripe';
 import "dotenv/config"
+import User from '../models/user_model.js';
+
+const stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export const createCashOrder = async (req) => {
     const shippingFee = 0;
@@ -76,7 +79,6 @@ export const updateOrderToDelivered = async (orderId) => {
 
 
 export const checkoutSession = async (req) => {
-    const stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
     // App settings
     const taxPrice = 0;
@@ -115,10 +117,66 @@ export const checkoutSession = async (req) => {
         customer_email: req.user.email,
         client_reference_id: req.params.cartId,
         metadata: {
-            cartId: req.params.cartId,
+            shippingAddress: req.body.shippingAddress,
         },
     });
 
     // 4. Send session to response
     return session;
 }
+
+
+const createCardOrder = async (session) => {
+  const cartId = session.client_reference_id;
+  const shippingAddress = session.metadata;
+  const oderPrice = session.amount_total / 100;
+
+  const cart = await Cart.findById(cartId);
+  const user = await User.findOne({ email: session.customer_email });
+
+  // 3) Create order with default paymentMethodType card
+  const order = await Order.create({
+    user: user!._id,
+    cartItems: cart!.cartItems,
+    shippingAddress,
+    totalOrderPrice: oderPrice,
+    isPaid: true,
+    paidAt: Date.now(),
+    paymentMethodType: 'card',
+  });
+
+  // 4) After creating order, decrement product quantity, increment product sold
+  if (order) {
+    const bulkOption = cart!.cartItems.map((item) => ({
+      updateOne: {
+        filter: { _id: item.product },
+        update: { $inc: { quantity: -item.quantity, sold: +item.quantity } },
+      },
+    }));
+    await Product.bulkWrite(bulkOption, {});
+
+    // 5) Clear cart depend on cartId
+    await Cart.findByIdAndDelete(cartId);
+  }
+};
+
+export const webhookCheckout = async (req) => {
+    const sig = req.headers['stripe-signature'];
+
+    let event;
+
+    try {
+        event = stripeClient.webhooks.constructEvent(
+            req.body,
+            sig,
+            (process.env.STRIPE_WEBHOOK_SECRET as string)
+        );
+    } catch (err) {
+        return false;
+    }
+    if (event.type === 'checkout.session.completed') {
+        //  Create order
+        await createCardOrder(event.data.object);
+    }
+    return true
+};
