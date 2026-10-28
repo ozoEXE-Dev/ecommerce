@@ -31,11 +31,6 @@
     "@types/express": "^5.0.6"
   },
   "devDependencies": {
-    "@babel/core": "^8.0.5",
-    "@babel/node": "^8.0.5",
-    "@babel/preset-env": "^8.0.5",
-    "@babel/preset-typescript": "^8.0.1",
-    "@jest/globals": "^30.5.2",
     "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
