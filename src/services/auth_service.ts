@@ -45,6 +45,9 @@ export const protect = async (req) => {
     if (!user) {
         throw new AppError(404, "user is no longer exist");
     }
+    if(!user.active){
+        throw new AppError(403, "user is deactivated. please contact support team");
+    }
     //check if user changed password after token created
     if (user.passwordChangedAt) {
         const passwordChangedAtTimeStamp = Math.trunc(user.passwordChangedAt!.getTime() / 1000);
